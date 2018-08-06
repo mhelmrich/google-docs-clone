@@ -63,4 +63,3 @@ typings/
 out
 env.sh
 .eslintrc
-.compilerc
