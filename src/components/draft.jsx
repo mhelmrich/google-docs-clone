@@ -3,6 +3,7 @@ import AppBar from 'material-ui/AppBar';
 import { Editor, EditorState, RichUtils } from 'draft-js';
 import TextField from 'material-ui/TextField'
 //import ColorMenu from './color-menu.jsx'
+import Colors from './colors.jsx'
 
 export default class Draft extends React.Component {
   constructor(props) {
@@ -53,13 +54,14 @@ export default class Draft extends React.Component {
 
   render() {
     return (<div>
-      <button onMouseDown={(e) => this._onBoldClick(e)}>BOLD</button>
+      <Colors />
+      {/*<button onMouseDown={(e) => this._onBoldClick(e)}>BOLD</button>
       <button onMouseDown={(e) => this._onItalClick(e)}>ITALICS</button>
       <button onMouseDown={(e) => this._onUnderClick(e)}>UNDERLINE</button>
       <button onMouseDown={(e) => this._onLeftClick(e)}>Left</button>
       <button onMouseDown={(e) => this._onCenterClick(e)}>Center</button>
       <button onMouseDown={(e) => this._onRightClick(e)}>Right</button>
-      {/*<ColorMenu />*/}
+
       <TextField
           id="with-placeholder"
           label="With placeholder"
@@ -70,7 +72,7 @@ export default class Draft extends React.Component {
       <Editor
         editorState={this.state.editorState}
         onChange={this.onChange}
-      />
+      /> */}
     </div>);
   }
 }
