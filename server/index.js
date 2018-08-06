@@ -1,8 +1,12 @@
-import http from 'http';
+const app = require('express')();
+const server = require('http').Server(app);
+const io = require('socket.io')(server);
 
-http.createServer((req, res) => {
-  res.writeHead(200, {'Content-Type': 'text/plain'});
-  res.end('Hello World\n');
-}).listen(1337, '127.0.0.1');
+io.on('connection', (socket) => {
+ console.log('connected', socket);
+});
 
-console.log('Server running at http://127.0.0.1:1337/');
+const port = process.env.PORT || 8080;
+server.listen(port, () => {
+ console.log(`Google Docs server listening on port ${port}!`);
+});
