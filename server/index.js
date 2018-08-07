@@ -40,7 +40,6 @@ app.use(passport.session());
 app.use('/', auth(passport));
 
 io.on('connection', (socket) => {
- console.log('connected', socket);
 });
 
 const port = process.env.PORT || 8080;
