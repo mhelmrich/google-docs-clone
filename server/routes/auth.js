@@ -17,7 +17,6 @@ module.exports = (passport) => {
   });
 
   router.post('/register', (req, res) => {
-    console.log(req.body);
     if (req.body.email && req.body.username && req.body.password) {
       (new User({
         email: req.body.email,
@@ -32,6 +31,10 @@ module.exports = (passport) => {
   router.use((req, res, next) => {
     if (req.user) next();
     else res.json({success: false});
+  });
+
+  router.get('/username', (req, res) => {
+    res.json({success: true, username: req.user.username});
   });
 
   router.post('/logout', (req, res) => {
