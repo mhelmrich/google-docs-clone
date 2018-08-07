@@ -2,8 +2,8 @@ const app = require('express')();
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
 const bodyParser = require('body-parser');
-const cookieParser = require('cookie-parser');
 const session = require('express-session');
+const connectMongo = require('connect-mongo');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const mongoose = require('mongoose');
@@ -14,10 +14,16 @@ mongoose.connection.on('connected', () => {
   console.log('Connected to database!');
 });
 mongoose.connect(process.env.MONGODB_URI);
+const MongoStore = connectMongo(session);
 
 app.use(bodyParser.json());
-app.use(cookieParser());
-app.use(session({secret: process.env.SECRET}));
+app.use(session({
+  secret: process.env.SECRET,
+  store: new MongoStore({
+    mongooseConnection: mongoose.connection,
+    stringify: false
+  })
+}));
 
 passport.serializeUser((user, done) => done(null, user._id));
 
@@ -40,6 +46,15 @@ app.use(passport.session());
 app.use('/', auth(passport));
 
 io.on('connection', (socket) => {
+  socket.user = null;
+  socket.on('authenticate', (sessionID) => {
+    mongoose.connection.db.collection('sessions', (err, sessions) => {
+      sessions.findOne({_id: sessionID})
+      .then((session) => {
+        socket.user = session.session.passport.user;
+      });
+    });
+  });
 });
 
 const port = process.env.PORT || 8080;

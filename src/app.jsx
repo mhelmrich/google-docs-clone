@@ -1,6 +1,6 @@
 import React from 'react';
-import io from 'socket.io-client';
 import axios from 'axios';
+import io from 'socket.io-client';
 import AppBar from 'material-ui/AppBar';
 import Login from './components/login';
 import Draft from './components/draft';
@@ -9,26 +9,25 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      loggedIn: false,
-      username: '',
+      loggedIn: false
     };
   }
-  componentDidMount() {
-    axios.get('http://localhost:8080/username')
+  login() {
+    axios.get('http://localhost:8080/session')
     .then((response) => {
-      if (response.data.success) {
-        this.setState({loggedIn: true, username: response.data.username});
+      if (response.data.sessionID) {
+        this.socket = io('http://localhost:8080');
+        this.socket.emit('authenticate', response.data.sessionID);
+        this.setState({loggedIn: true});
       }
     })
-    .catch((error) => {
-      console.log(error);
+    .catch((err) => {
+      console.log(err);
     });
   }
-  login(username) {
-    this.setState({loggedIn: true, username: username});
-  }
   logout() {
-    this.setState({loggedIn: false, username: ''});
+    this.socket.disconnect();
+    this.setState({loggedIn: false});
   }
   render() {
     if (this.state.loggedIn) return (<div>
@@ -36,8 +35,8 @@ export default class App extends React.Component {
         title="Title"
         iconClassNameRight="muidocs-icon-navigation-expand-more"
       />
-      <Draft />
+      <Draft socket={this.socket}/>
     </div>);
-    return <Login login={(username) => this.login(username)}/>
+    return <Login login={() => this.login()}/>
   }
 }

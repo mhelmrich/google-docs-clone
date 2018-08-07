@@ -1,26 +1,29 @@
 import React from 'react';
-import io from 'socket.io-client';
 import AppBar from 'material-ui/AppBar';
-import { Editor, EditorState, RichUtils } from 'draft-js';
 import TextField from 'material-ui/TextField'
+import {Editor, EditorState, RichUtils, convertFromRaw, convertToRaw} from 'draft-js';
 //import ColorMenu from './color-menu.jsx'
 import Colors from './colors.jsx'
 
 export default class Draft extends React.Component {
   constructor(props) {
     super(props);
+    let editorState = EditorState.createEmpty();
+    if (this.props.content) {
+      editorState = this.getContent(this.props.content);
+    }
     this.state = {
-      editorState: EditorState.createEmpty(),
+      editorState,
       textAlignment: 'left',
       colorHex: ''
     };
     this.onChange = (editorState) => this.setState({editorState});
-    this.socket = io('http://localhost:8080');
   }
-  componentDidMount() {
-    this.socket.on('connect', () => {
-      //handle socket events
-    });
+  getContent() {
+    return JSON.stringify(convertToRaw(this.state.editorState.getCurrentContent()));
+  }
+  setContent(rawContent) {
+    this.setState({editorState: convertFromRaw(JSON.parse(rawContent))});
   }
   _onBoldClick(e) {
     e.preventDefault();
