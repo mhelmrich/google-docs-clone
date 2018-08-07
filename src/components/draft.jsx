@@ -1,4 +1,5 @@
 import React from 'react';
+import io from 'socket.io-client';
 import AppBar from 'material-ui/AppBar';
 import { Editor, EditorState, RichUtils } from 'draft-js';
 import TextField from 'material-ui/TextField'
@@ -14,32 +15,37 @@ export default class Draft extends React.Component {
       colorHex: ''
     };
     this.onChange = (editorState) => this.setState({editorState});
+    this.socket = io('http://localhost:8080');
   }
-
+  componentDidMount() {
+    this.socket.on('connect', () => {
+      //handle socket events
+    });
+  }
   _onBoldClick(e) {
-    e.preventDefault()
+    e.preventDefault();
     this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, 'BOLD'));
   }
   _onItalClick(e) {
-    e.preventDefault()
+    e.preventDefault();
     this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, 'ITALIC'));
   }
   _onUnderClick(e) {
-    e.preventDefault()
+    e.preventDefault();
     this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, 'UNDERLINE'));
   }
   _onLeftClick(e) {
-    e.preventDefault()
+    e.preventDefault();
     this.onChange(console.log(this));
   }
   _onCenterClick(e) {
-    e.preventDefault()
+    e.preventDefault();
     this.onChange(this.setState({
       textAlignment: 'center'
     }));
   }
   _onRightClick(e) {
-    e.preventDefault()
+    e.preventDefault();
     this.onChange(this.setState({
       textAlignment: 'right'
     }));
@@ -48,7 +54,7 @@ export default class Draft extends React.Component {
   handleText(e) {
     this.setState({
       colorHex: e.target.value
-    })
+    });
     console.log(this.state.colorHex)
   }
 

@@ -12,11 +12,8 @@ export default class App extends React.Component {
       loggedIn: false,
       username: '',
     };
-    this.socket = io('http://localhost:8080');
   }
   componentDidMount() {
-    this.socket.on('connect', () => {
-    });
     axios.get('http://localhost:8080/username')
     .then((response) => {
       if (response.data.success) {

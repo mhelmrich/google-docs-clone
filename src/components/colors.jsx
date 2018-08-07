@@ -21,30 +21,30 @@ export default class Colors extends React.Component {
 
 
  _onBoldClick(e) {
-   e.preventDefault()
+   e.preventDefault();
    this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, 'BOLD'));
  }
  _onItalClick(e) {
-   e.preventDefault()
+   e.preventDefault();
    this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, 'ITALIC'));
  }
  _onUnderClick(e) {
-   e.preventDefault()
+   e.preventDefault();
    this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, 'UNDERLINE'));
  }
 
  _onLeftClick(e) {
-   e.preventDefault()
+   e.preventDefault();
    this.onChange(console.log(this));
  }
  _onCenterClick(e) {
-   e.preventDefault()
+   e.preventDefault();
    this.onChange(this.setState({
      textAlignment: 'center'
    }));
  }
  _onRightClick(e) {
-   e.preventDefault()
+   e.preventDefault();
    this.onChange(this.setState({
      textAlignment: 'right'
    }));
@@ -56,7 +56,7 @@ export default class Colors extends React.Component {
  handleText(e) {
    this.setState({
      colorHex: e.target.value
-   })
+   });
    console.log(this.state.colorHex)
  }
 
