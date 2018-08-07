@@ -14,10 +14,7 @@ export default class Colors extends React.Component {
    };
 
    this.focus = () => this.refs.editor.focus();
-   this.onChange = (editorState) => {
-     RichUtils.toggleInlineStyle(this.state.editorState, this.state.activeFont);
-     this.setState({editorState})
-   };
+   this.onChange = (editorState) => this.setState({editorState});
    this.toggleColor = (toggledColor) => this._toggleColor(toggledColor);
  }
 
@@ -35,6 +32,7 @@ export default class Colors extends React.Component {
    e.preventDefault()
    this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, 'UNDERLINE'));
  }
+
  _onLeftClick(e) {
    e.preventDefault()
    this.onChange(console.log(this));
@@ -50,6 +48,9 @@ export default class Colors extends React.Component {
    this.onChange(this.setState({
      textAlignment: 'right'
    }));
+ }
+ _onNewFont() {
+   this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, this.state.activeFont));
  }
 
  handleText(e) {
@@ -83,6 +84,22 @@ export default class Colors extends React.Component {
 
    this.onChange(nextEditorState);
  }*/
+
+ _toggleBulletPoints(e){
+   e.preventDefault();
+   this.onChange(RichUtils.toggleBlockType(
+       this.state.editorState,
+       'unordered-list-item'
+   ))
+}
+_toggleNumberList(e){
+  e.preventDefault();
+  this.onChange(RichUtils.toggleBlockType(
+      this.state.editorState,
+      'ordered-list-item'
+  ))
+}
+
 
  _toggleColor(toggledColor) {
    const {editorState} = this.state;
@@ -129,6 +146,8 @@ export default class Colors extends React.Component {
        <button onMouseDown={(e) => this._onBoldClick(e)}>BOLD</button>
        <button onMouseDown={(e) => this._onItalClick(e)}>ITALICS</button>
        <button onMouseDown={(e) => this._onUnderClick(e)}>UNDERLINE</button>
+       <button onMouseDown={(e) => this._toggleBulletPoints(e)}>Bullet points</button>
+       <button onMouseDown={(e) => this._toggleNumberList(e)}>Numbered list</button>
        <button onMouseDown={(e) => this._onLeftClick(e)}>Left</button>
        <button onMouseDown={(e) => this._onCenterClick(e)}>Center</button>
        <button onMouseDown={(e) => this._onRightClick(e)}>Right</button>
@@ -148,10 +167,6 @@ export default class Colors extends React.Component {
           activeFont={this.state.activeFont}
           onChange={nextFont => this.setState({ activeFont: nextFont.family })}
         />
-        <p className="apply-font">
-          The font will be applied to this text.
-        </p>
-        {console.log(this.state.activeFont)}
       </div>
 
 
@@ -160,14 +175,15 @@ export default class Colors extends React.Component {
          editorState={editorState}
          onToggle={this.toggleColor}
        />
-       <div style={styles.editor} onClick={this.focus}>
+       <div style={styles.editor} onClick={this.focus} className="apply-font">
          <Editor
            customStyleMap={colorStyleMap}
            editorState={editorState}
            onChange={this.onChange}
-           placeholder="Write something colorful..."
+           placeholder="Type Something to Begin!"
            ref="editor"
            className="apply-font"
+           textAlignment="center"
          />
        </div>
      </div>
@@ -265,8 +281,9 @@ editor: {
  cursor: 'text',
  fontSize: 16,
  marginTop: 20,
- minHeight: 400,
+ minHeight: 250,
  paddingTop: 20,
+ border: '1px solid #ccc',
 },
 controls: {
  fontFamily: '\'Helvetica\', sans-serif',
