@@ -66,6 +66,7 @@ export default class DocumentView extends React.Component {
   componentDidMount() {
     this.props.socket.on('doc', (doc) => {
       this.setState({doc, draft: true});
+      this.props.toggleDocs()
     });
     this.props.socket.on('err', (err) => {
       console.log(err);
@@ -85,7 +86,7 @@ export default class DocumentView extends React.Component {
 
 
   render() {
-    if (this.state.draft) {
+    if (this.state.draft && this.props.showDoc) {
       return <Draft doc={this.state.doc} changeMenuTitle={this.props.changeMenuTitle} title={this.state.doc.title}/>
     }
     return (

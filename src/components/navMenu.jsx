@@ -13,6 +13,7 @@ export default class NavMenu extends React.Component {
       menuTitle: 'HDocs',
       anchorEl: null,
       showMenu: false,
+      showDoc: false
     };
   }
   render() {
@@ -41,7 +42,10 @@ export default class NavMenu extends React.Component {
             targetOrigin={{horizontal: 'left', vertical: 'top'}}
             onRequestClose={() => this.setState({showMenu: false})}>
             <Menu>
-              <MenuItem onClick={(e) => this.setState({showMenu:false})}>
+              <MenuItem onClick={(e) => this.setState({
+                showDoc: !this.state.showDoc,
+                showMenu:false
+              })}>
                 My Documents
               </MenuItem>
               <MenuItem onClick={(e) => this.setState({showMenu:false})}>
@@ -54,7 +58,10 @@ export default class NavMenu extends React.Component {
           </Popover>
         </AppBar>
         <DocumentView user={this.props.user} socket={this.props.socket}
-          changeMenuTitle={(title) => this.setState({menuTitle: title})} />
+          changeMenuTitle={(title) => this.setState({menuTitle: title})}
+          toggleDocs={() => this.setState({showDoc: !this.state.showDoc})}
+          showDoc={this.state.showDoc}
+         />
       </div>
     )
   }
