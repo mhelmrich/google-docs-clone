@@ -2,18 +2,8 @@ import React from 'react';
 import axios from 'axios';
 import io from 'socket.io-client';
 import storage from 'electron-json-storage';
-import AppBar from 'material-ui/AppBar';
-import ToolBar from 'material-ui/Toolbar';
-import IconButton from 'material-ui/IconButton'
-import Menu from 'material-ui/Menu'
-import MenuItem from 'material-ui/MenuItem'
-import Popover from 'material-ui/Popover'
-import Avatar from 'material-ui/Avatar';
-import TextField from 'material-ui/TextField';
-import Dialog from 'material-ui/Dialog';
-import {ExitToApp, FormatBold, FormatItalic, FormatUnderlined, FormatAlignLeft, FormatAlignCenter, FormatAlignRight, FormatListBulleted, FormatListNumbered, FormatSize, FormatColorText} from 'material-ui-icons';
 import Login from './components/login';
-import DocumentView from './components/documentView';
+import NavMenu from './components/navMenu';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -21,8 +11,6 @@ export default class App extends React.Component {
     this.state = {
       loggedIn: 0,
       user: null,
-      anchorEl: null,
-      showMenu: false,
     };
   }
   componentDidMount() {
@@ -59,42 +47,7 @@ export default class App extends React.Component {
   }
   render() {
     if (!this.state.loggedIn) return <h2>Loading...</h2>;
-    if (this.state.loggedIn < 0) return <Login login={() => this.login()}/>
-    const avatars = [(
-      <Avatar style={{margin: 10, color: '#fff', backgroundColor: 'orange'}}>
-        M
-      </Avatar>
-      ),
-      (<Avatar style={{margin: 10, color: '#fff', backgroundColor: "red"}}>
-        D
-      </Avatar>)];
-    return (
-      <div>
-        <AppBar title="HDocs" iconClassNameRight="muidocs-icon-navigation-expand-more"
-          onLeftIconButtonClick={(e) => this.setState({
-            anchorEl: e.currentTarget,
-            showMenu: true
-          })}>
-          {avatars[0]} {avatars[1]}
-          <Popover open={this.state.showMenu} anchorEl={this.state.anchorEl}
-            anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
-            targetOrigin={{horizontal: 'left', vertical: 'top'}}
-            onRequestClose={() => this.setState({showMenu: false})}>
-            <Menu>
-              <MenuItem onClick={(e) => this.setState({showMenu:false})}>
-                My Documents
-              </MenuItem>
-              <MenuItem onClick={(e) => this.setState({showMenu:false})}>
-                Share Documents
-              </MenuItem>
-              <MenuItem onClick={(e) => this.logout()}>
-                Logout
-              </MenuItem>
-            </Menu>
-          </Popover>
-        </AppBar>
-        <DocumentView user={this.state.user} socket={this.socket}/>
-      </div>
-    );
+    if (this.state.loggedIn < 0) return <Login login={() => this.login()} />;
+    return <NavMenu user={this.state.user} socket={this.socket} />;
   }
 }
