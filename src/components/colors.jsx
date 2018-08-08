@@ -7,7 +7,7 @@ import Menu from 'material-ui/Menu'
 import MenuItem from 'material-ui/MenuItem'
 import Popover from 'material-ui/Popover'
 import IconButton from 'material-ui/IconButton'
-import {FormatBold, FormatItalic, FormatUnderlined, FormatAlignLeft, FormatAlignCenter, FormatAlignRight, FormatListBulleted, FormatListNumbered, FormatSize} from 'material-ui-icons';
+import {FormatBold, FormatItalic, FormatUnderlined, FormatAlignLeft, FormatAlignCenter, FormatAlignRight, FormatListBulleted, FormatListNumbered, FormatSize, FormatColorText} from 'material-ui-icons';
 
 
 export default class Colors extends React.Component {
@@ -17,7 +17,9 @@ export default class Colors extends React.Component {
      editorState: EditorState.createEmpty(),
      colorHex: '',
      activeFont: 'Open Sans',
-     anchorEl: null
+     anchorEl: null,
+     showColor: false,
+     showSize: false,
    };
 
    this.focus = () => this.refs.editor.focus();
@@ -134,6 +136,7 @@ _toggleNumberList(e){
    this.onChange(nextEditorState);
  }
 
+
  handleClick = event => {
     this.setState({
       anchorEl: event.currentTarget,
@@ -159,7 +162,8 @@ _toggleNumberList(e){
  render() {
    const {editorState} = this.state;
    const { classes } = this.props;
-    const { anchorEl } = this.state;
+    const { anchorEl, open, placement } = this.state;
+
    return (
      <div style={styles.root}>
 
@@ -172,15 +176,19 @@ _toggleNumberList(e){
        <IconButton onClick={(e) => this._onCenterClick(e)}> <FormatAlignCenter/> </IconButton>
        <IconButton onClick={(e) => this._onRightClick(e)}> <FormatAlignRight/> </IconButton>
 
-       <div>
-         <IconButton variant="contained" onClick={this.handleClick}> <FormatSize/> </IconButton>
+         <IconButton  onClick={(e) => this.setState({
+           anchorEl: e.currentTarget,
+           showSize: true
+         })}> <FormatSize/> </IconButton>
          <Popover
-           open={this.state.open}
+           open={this.state.showSize}
            anchorEl={anchorEl}
            onClose={this.handleClose}
            anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
             targetOrigin={{horizontal: 'left', vertical: 'top'}}
-            onRequestClose={this.handleRequestClose}
+            onRequestClose={() => this.setState({
+              showSize: false
+            })}
          >
            <Menu>
              <MenuItem onClick={(e) => this._onFontClick(e, 'two')}>2</MenuItem>
@@ -191,15 +199,26 @@ _toggleNumberList(e){
              <MenuItem onClick={(e) => this._onFontClick(e, 'seventytwo')}>72</MenuItem>
            </Menu>
          </Popover>
-       </div>
 
-       <TextField
-           id="with-placeholder"
-           label="With placeholder"
-           placeholder="Color Hex Value"
-           className='colorHex'
-           onChange={(events) => this.handleText(events)}
-         />
+         <IconButton  onClick={(e) => this.setState({
+           anchorEl: e.currentTarget,
+           showColor: true
+         })}> <FormatColorText/> </IconButton>
+         <Popover
+           open={this.state.showColor}
+           anchorEl={anchorEl}
+           onClose={this.handleClose}
+           anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
+            targetOrigin={{horizontal: 'left', vertical: 'top'}}
+            onRequestClose={() => this.setState({
+              showColor:false
+            })}
+         >
+       <ColorControls
+         editorState={editorState}
+         onToggle={this.toggleColor}
+       />
+     </Popover>
 
          <div>
          <FontPicker
@@ -209,11 +228,13 @@ _toggleNumberList(e){
         />
       </div>
 
-
-       <ColorControls
-         editorState={editorState}
-         onToggle={this.toggleColor}
-       />
+       {/*<TextField
+           id="with-placeholder"
+           label="With placeholder"
+           placeholder="Color Hex Value"
+           className='colorHex'
+           onChange={(events) => this.handleText(events)}
+         />*/}
        <div style={styles.editor} onClick={this.focus} className="apply-font">
          <Editor
            customStyleMap={colorStyleMap}
@@ -248,9 +269,12 @@ render() {
  }
 
  return (
-   <span style={style} onMouseDown={this.onToggle}>
+   <MenuItem style={style} onMouseDown={this.onToggle}>
      {this.props.label}
-   </span>
+   </MenuItem>
+   /*<span style={style} onMouseDown={this.onToggle}>
+     {this.props.label}
+   </span>*/
  );
 }
 }
@@ -268,16 +292,21 @@ var COLORARR = [
 
 const ColorControls = (props) => {
 var currentStyle = props.editorState.getCurrentInlineStyle();
+var index = 0;
 return (
+
  <div style={styles.controls}>
+   <Menu>
    {COLORARR.map(type =>
      <StyleButton
        active={currentStyle.has(type.style)}
        label={type.label}
        onToggle={props.onToggle}
        style={type.style}
+       key={++index}
      />
    )}
+ </Menu>
  </div>
 );
 };
