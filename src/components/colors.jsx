@@ -2,15 +2,22 @@ import React from 'react';
 import TextField from 'material-ui/TextField'
 import { Editor, EditorState, RichUtils, Modifier} from 'draft-js';
 import FontPicker from 'font-picker-react';
+import Button from 'material-ui/RaisedButton'
+import Menu from 'material-ui/Menu'
+import MenuItem from 'material-ui/MenuItem'
+import Popover from 'material-ui/Popover'
+import IconButton from 'material-ui/IconButton'
+import {FormatBold, FormatItalic, FormatUnderlined, FormatAlignLeft, FormatAlignCenter, FormatAlignRight, FormatListBulleted, FormatListNumbered, FormatSize} from 'material-ui-icons';
+
 
 export default class Colors extends React.Component {
  constructor(props) {
    super(props);
    this.state = {
      editorState: EditorState.createEmpty(),
-     textAlignment: 'left',
      colorHex: '',
-     activeFont: 'Open Sans'
+     activeFont: 'Open Sans',
+     anchorEl: null
    };
 
    this.focus = () => this.refs.editor.focus();
@@ -19,7 +26,25 @@ export default class Colors extends React.Component {
  }
 
 
+ getBlockStyle(block) {
+    switch (block.getType()) {
+        case 'left':
+            return 'left';
+        case 'center':
+            return 'center';
+        case 'right':
+            return 'right';
+        default:
+            return null;
+    }
+}
 
+
+_onFontClick(e, fontSize) {
+  e.preventDefault();
+  this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, fontSize));
+  this.handleRequestClose();
+}
  _onBoldClick(e) {
    e.preventDefault();
    this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, 'BOLD'));
@@ -35,23 +60,20 @@ export default class Colors extends React.Component {
 
  _onLeftClick(e) {
    e.preventDefault();
-   this.onChange(console.log(this));
+   this.onChange(RichUtils.toggleBlockType(this.state.editorState, 'left'));
+   //this.onChange(RichUtils.toggleBlockType(this.state.editorState, 'left'))
  }
  _onCenterClick(e) {
    e.preventDefault();
-   this.onChange(this.setState({
-     textAlignment: 'center'
-   }));
+   this.onChange(RichUtils.toggleBlockType(this.state.editorState, 'center'));
+   //this.onChange(RichUtils.toggleBlockType(this.state.editorState, 'center'))
  }
  _onRightClick(e) {
    e.preventDefault();
-   this.onChange(this.setState({
-     textAlignment: 'right'
-   }));
+   this.onChange(RichUtils.toggleBlockType(this.state.editorState, 'right'));
+   //this.onChange(RichUtils.toggleBlockType(this.state.editorState, 'right'))
  }
- _onNewFont() {
-   this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, this.state.activeFont));
- }
+
 
  handleText(e) {
    this.setState({
@@ -59,31 +81,6 @@ export default class Colors extends React.Component {
    });
    console.log(this.state.colorHex)
  }
-
-
- /*_toggleList() {
-   const {editorState} = this.state;
-   const selection = editorState.getSelection();
-
-   const currentStyle = editorState.getCurrentInlineStyle();
-
-   // Unset style override for current color.
-   if (selection.isCollapsed()) {
-     nextEditorState = currentStyle.reduce((state, color) => {
-       return RichUtils.toggleInlineStyle(state, color);
-     }, nextEditorState);
-   }
-
-   // If the color is being toggled on, apply it.
-   if (!currentStyle.has(toggledColor)) {
-     nextEditorState = RichUtils.toggleInlineStyle(
-       nextEditorState,
-       toggledColor
-     );
-   }
-
-   this.onChange(nextEditorState);
- }*/
 
  _toggleBulletPoints(e){
    e.preventDefault();
@@ -137,21 +134,64 @@ _toggleNumberList(e){
    this.onChange(nextEditorState);
  }
 
+ handleClick = event => {
+    this.setState({
+      anchorEl: event.currentTarget,
+      open: true,
+    });
+  };
+
+  handleClose = () => {
+    console.log("HERE")
+    this.setState({
+      anchorEl: null,
+    });
+  };
+
+  handleRequestClose = () => {
+    this.setState({
+      open: false,
+    });
+  };
+
+
+
  render() {
    const {editorState} = this.state;
+   const { classes } = this.props;
+    const { anchorEl } = this.state;
    return (
      <div style={styles.root}>
 
+       <IconButton onClick={(e) => this._onBoldClick(e)}> <FormatBold/> </IconButton>
+       <IconButton onClick={(e) => this._onItalClick(e)}> <FormatItalic/> </IconButton>
+       <IconButton onClick={(e) => this._onUnderClick(e)}> <FormatUnderlined/> </IconButton>
+       <IconButton onClick={(e) => this._toggleBulletPoints(e)}> <FormatListBulleted/> </IconButton>
+       <IconButton onClick={(e) => this._toggleNumberList(e)}> <FormatListNumbered/> </IconButton>
+       <IconButton onClick={(e) => this._onLeftClick(e)}> <FormatAlignLeft/> </IconButton>
+       <IconButton onClick={(e) => this._onCenterClick(e)}> <FormatAlignCenter/> </IconButton>
+       <IconButton onClick={(e) => this._onRightClick(e)}> <FormatAlignRight/> </IconButton>
 
-       <button onMouseDown={(e) => this._onBoldClick(e)}>BOLD</button>
-       <button onMouseDown={(e) => this._onItalClick(e)}>ITALICS</button>
-       <button onMouseDown={(e) => this._onUnderClick(e)}>UNDERLINE</button>
-       <button onMouseDown={(e) => this._toggleBulletPoints(e)}>Bullet points</button>
-       <button onMouseDown={(e) => this._toggleNumberList(e)}>Numbered list</button>
-       <button onMouseDown={(e) => this._onLeftClick(e)}>Left</button>
-       <button onMouseDown={(e) => this._onCenterClick(e)}>Center</button>
-       <button onMouseDown={(e) => this._onRightClick(e)}>Right</button>
-       {/*<ColorMenu />*/}
+       <div>
+         <IconButton variant="contained" onClick={this.handleClick}> <FormatSize/> </IconButton>
+         <Popover
+           open={this.state.open}
+           anchorEl={anchorEl}
+           onClose={this.handleClose}
+           anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
+            targetOrigin={{horizontal: 'left', vertical: 'top'}}
+            onRequestClose={this.handleRequestClose}
+         >
+           <Menu>
+             <MenuItem onClick={(e) => this._onFontClick(e, 'two')}>2</MenuItem>
+             <MenuItem onClick={(e) => this._onFontClick(e, 'four')}>4</MenuItem>
+             <MenuItem onClick={(e) => this._onFontClick(e, 'eight')}>8</MenuItem>
+             <MenuItem onClick={(e) => this._onFontClick(e, 'sixteen')}>16</MenuItem>
+             <MenuItem onClick={(e) => this._onFontClick(e, 'thirtytwo')}>32</MenuItem>
+             <MenuItem onClick={(e) => this._onFontClick(e, 'seventytwo')}>72</MenuItem>
+           </Menu>
+         </Popover>
+       </div>
 
        <TextField
            id="with-placeholder"
@@ -170,7 +210,6 @@ _toggleNumberList(e){
       </div>
 
 
-
        <ColorControls
          editorState={editorState}
          onToggle={this.toggleColor}
@@ -183,7 +222,7 @@ _toggleNumberList(e){
            placeholder="Type Something to Begin!"
            ref="editor"
            className="apply-font"
-           textAlignment="center"
+          blockStyleFn={this.getBlockStyle}
          />
        </div>
      </div>
@@ -246,6 +285,27 @@ return (
 // This object provides the styling information for our custom color
 // styles.
 const colorStyleMap = {
+  two: {
+    fontSize: 2
+  },
+  four: {
+    fontSize: 4
+  },
+  eight: {
+    fontSize: 8
+  },
+  sixteen: {
+    fontSize: 16
+  },
+  twentyfour: {
+    fontSize: 24
+  },
+  thirtytwo: {
+    fontSize: 32
+  },
+  seventytwo: {
+    fontSize: 72
+  },
 red: {
  color: 'rgba(255, 0, 0, 1.0)',
 },
@@ -267,6 +327,18 @@ indigo: {
 violet: {
  color: 'rgba(127, 0, 255, 1.0)',
 },
+selection0: {
+    borderLeft: 'solid 3px red',
+    backgroundColor: 'rgba(255,0,0,.5)'
+  },
+  selection1: {
+    borderLeft: 'solid 3px blue',
+    backgroundColor: 'rgba(0,255,0,.5)'
+  },
+  selection2: {
+    borderLeft: 'solid 3px green',
+    backgroundColor: 'rgba(0,0,255,.5)'
+  },
 };
 
 const styles = {
@@ -297,4 +369,13 @@ styleButton: {
  marginRight: 16,
  padding: '2px 0',
 },
+right: {
+    'text-align': 'right'
+},
+center: {
+    'text-align': 'center'
+},
+left: {
+    'text-align': 'left'
+}
 };
