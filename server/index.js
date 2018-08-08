@@ -51,7 +51,10 @@ io.on('connection', (socket) => {
     mongoose.connection.db.collection('sessions', (err, sessions) => {
       sessions.findOne({_id: sessionID})
       .then((session) => {
-        socket.user = session.session.passport.user;
+        if (session) {
+          socket.user = session.session.passport.user;
+          socket.emit('authenticated');
+        } else socket.emit('authenticationFailed');
       });
     });
   });
