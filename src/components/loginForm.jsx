@@ -1,4 +1,5 @@
 import React from 'react';
+import RaisedButton from 'material-ui/RaisedButton'
 
 class LoginForm extends React.Component {
   constructor(props) {
@@ -20,6 +21,8 @@ class LoginForm extends React.Component {
           onChange={(e) => this.setState({password: e.target.value})}/>
         <button onClick={() => this.submit()}>Log in</button>
         <button onClick={this.props.toRegistration}>Register here</button>
+        <RaisedButton onClick={() => this.submit()}>Login</RaisedButton>
+        <RaisedButton onClick={this.props.toRegistration}>Register</RaisedButton>
       </div>
     );
   }

@@ -10,6 +10,7 @@ import IconButton from "material-ui/IconButton"
 import Menu from 'material-ui/Menu'
 import MenuItem from 'material-ui/MenuItem'
 import Popover from 'material-ui/Popover'
+import Avatar from 'material-ui/Avatar';
 import { ExitToApp, FormatBold, FormatItalic, FormatUnderlined, FormatAlignLeft, FormatAlignCenter, FormatAlignRight, FormatListBulleted, FormatListNumbered, FormatSize, FormatColorText} from 'material-ui-icons';
 
 export default class App extends React.Component {
@@ -55,8 +56,21 @@ export default class App extends React.Component {
     });
   }
   render() {
-if (!this.state.loggedIn) return <h2>Loading...</h2>;
-if (this.state.loggedIn === 1) return (<div>
+    const avatars = [(
+      <Avatar style={{
+        margin: 10,
+        color: '#fff',
+        backgroundColor: "orange",
+      }}>M</Avatar>
+    ),
+  (<Avatar style={{
+    margin: 10,
+    color: '#fff',
+    backgroundColor: "Red",
+  }}>D</Avatar>
+  )]
+/*if (!this.state.loggedIn) return <h2>Loading...</h2>;
+if (this.state.loggedIn === 1) */return (<div>
        <AppBar
           title="HDocs"
           iconClassNameRight="muidocs-icon-navigation-expand-more"
@@ -65,6 +79,8 @@ if (this.state.loggedIn === 1) return (<div>
             showMenu: true
           })}
         >
+          {avatars[0]}
+          {avatars[1]}
           <Popover
             open={this.state.showMenu}
             anchorEl={this.state.anchorEl}
@@ -93,6 +109,6 @@ if (this.state.loggedIn === 1) return (<div>
         </AppBar>*/}
         <Draft socket={this.socket}/>
     </div>);
-    return <Login login={() => this.login()}/>
+    //return <Login login={() => this.login()}/>
   }
 }
