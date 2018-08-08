@@ -46,15 +46,26 @@ app.use(passport.session());
 app.use('/', auth(passport));
 
 io.on('connection', (socket) => {
-  socket.user = null;
   socket.on('authenticate', (sessionID) => {
     mongoose.connection.db.collection('sessions', (err, sessions) => {
       sessions.findOne({_id: sessionID})
       .then((session) => {
-        if (session) {
-          socket.user = session.session.passport.user;
-          socket.emit('authenticated');
-        } else socket.emit('authenticationFailed');
+        if (session) return User.findById(session.session.passport.user);
+        throw new Error('session invalid');
+      })
+      .then((user) => {
+        if (user) {
+          socket.user = user;
+          socket.emit('authenticated',
+            {username: user.username,
+              _id: user._id,
+              docs: user.docs,
+              sharedDocs: user.sharedDocs,
+            });
+        } else throw new Error('user not found');
+      })
+      .catch((err) => {
+        socket.emit('authenticationFailed', err.message);
       });
     });
   });

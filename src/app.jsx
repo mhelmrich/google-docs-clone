@@ -10,7 +10,8 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      loggedIn: 0
+      loggedIn: 0,
+      user: null,
     };
   }
   componentDidMount() {
@@ -33,23 +34,23 @@ export default class App extends React.Component {
   connectSocket(sessionID) {
     this.socket = io('http://localhost:8080');
     this.socket.emit('authenticate', sessionID);
-    this.socket.on('authenticated', () => {
+    this.socket.on('authenticated', (user) => {
       storage.set('session', {sessionID});
-      this.setState({loggedIn: 1});
+      this.setState({user, loggedIn: 1});
     });
     this.socket.on('authenticationFailed', () => this.logout());
   }
   logout() {
     this.socket.disconnect();
     storage.remove('session', () => {
-      this.setState({loggedIn: -1});
+      this.setState({user: null, loggedIn: -1});
     });
   }
   render() {
     if (!this.state.loggedIn) return <h2>Loading...</h2>;
     if (this.state.loggedIn === 1) return (<div>
       <AppBar
-        title="Title"
+        title="HDocs"
         iconClassNameRight="muidocs-icon-navigation-expand-more"
       />
       <Draft socket={this.socket}/>
