@@ -95,6 +95,15 @@ io.on('connection', (socket) => {
       .catch((err) => socket.emit('err', err.message));
     }
   });
+  socket.on('docChange', (update) => {
+    if (socket.user) {
+      console.log('docChange:', update);
+      Document.findByIdAndUpdate(
+        update.id,
+        {$set: {content: update.content}},
+      );
+    }
+  });
 });
 
 const port = process.env.PORT || 8080;
