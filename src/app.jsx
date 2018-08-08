@@ -55,9 +55,8 @@ export default class App extends React.Component {
     });
   }
   render() {
-<<<<<<< HEAD
-    //if (this.state.loggedIn)
-     return (<div>
+if (!this.state.loggedIn) return <h2>Loading...</h2>;
+if (this.state.loggedIn === 1) return (<div>
        <AppBar
           title="HDocs"
           iconClassNameRight="muidocs-icon-navigation-expand-more"
@@ -93,16 +92,7 @@ export default class App extends React.Component {
 
         </AppBar>*/}
         <Draft socket={this.socket}/>
-=======
-    if (!this.state.loggedIn) return <h2>Loading...</h2>;
-    if (this.state.loggedIn === 1) return (<div>
-      <AppBar
-        title="HDocs"
-        iconClassNameRight="muidocs-icon-navigation-expand-more"
-      />
-      <Draft socket={this.socket}/>
->>>>>>> 02e2a40472bb9a671b6853d748fefefd9f2304be
     </div>);
-    //return <Login login={() => this.login()}/>
+    return <Login login={() => this.login()}/>
   }
 }
