@@ -1,6 +1,7 @@
 import React from 'react';
 import AppBar from 'material-ui/AppBar';
 import TextField from 'material-ui/TextField'
+import IconButton from 'material-ui/IconButton'
 import {Editor, EditorState, RichUtils, convertFromRaw, convertToRaw} from 'draft-js';
 //import ColorMenu from './color-menu.jsx'
 import Colors from './colors.jsx'
