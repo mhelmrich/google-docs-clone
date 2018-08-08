@@ -3,7 +3,7 @@ import axios from 'axios';
 import LoginForm from './loginForm';
 import RegistrationForm from './registrationForm';
 
-class Login extends React.Component {
+export default class Login extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -38,5 +38,3 @@ class Login extends React.Component {
       register={(email, username, password) => this.register(email, username, password)}/>
   }
 }
-
-export default Login;

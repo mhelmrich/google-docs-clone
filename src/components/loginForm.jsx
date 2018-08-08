@@ -1,7 +1,7 @@
 import React from 'react';
 import RaisedButton from 'material-ui/RaisedButton'
 
-class LoginForm extends React.Component {
+export default class LoginForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -27,5 +27,3 @@ class LoginForm extends React.Component {
     );
   }
 }
-
-export default LoginForm;

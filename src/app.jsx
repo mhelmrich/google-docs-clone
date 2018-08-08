@@ -4,6 +4,7 @@ import io from 'socket.io-client';
 import storage from 'electron-json-storage';
 import AppBar from 'material-ui/AppBar';
 import Login from './components/login';
+import DocumentView from './components/documentView';
 import Draft from './components/draft';
 import ToolBar from 'material-ui/Toolbar'
 import IconButton from "material-ui/IconButton"
