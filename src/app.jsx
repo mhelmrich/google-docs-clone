@@ -11,6 +11,8 @@ import Menu from 'material-ui/Menu'
 import MenuItem from 'material-ui/MenuItem'
 import Popover from 'material-ui/Popover'
 import Avatar from 'material-ui/Avatar';
+import TextField from 'material-ui/TextField';
+import Dialog from 'material-ui/Dialog';
 import { ExitToApp, FormatBold, FormatItalic, FormatUnderlined, FormatAlignLeft, FormatAlignCenter, FormatAlignRight, FormatListBulleted, FormatListNumbered, FormatSize, FormatColorText} from 'material-ui-icons';
 
 export default class App extends React.Component {
