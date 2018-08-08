@@ -11,7 +11,6 @@ class RegistrationForm extends React.Component {
     }
   }
   submit() {
-    console.log('submit registration');
     if (this.state.password === this.state.confirm) {
       this.props.register(this.state.email, this.state.username, this.state.password);
     }

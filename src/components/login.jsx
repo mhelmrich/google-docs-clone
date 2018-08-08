@@ -16,7 +16,7 @@ class Login extends React.Component {
   login(username, password) {
     axios.post('http://localhost:8080/login', {username, password})
     .then((resp) => {
-      if (resp.data.success) this.props.login(username);
+      if (resp.data.success) this.props.login();
     })
     .catch((err) => {
       console.log(err);

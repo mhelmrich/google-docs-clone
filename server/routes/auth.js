@@ -41,8 +41,8 @@ module.exports = (passport) => {
     else res.json({success: false});
   });
 
-  router.get('/username', (req, res) => {
-    res.json({success: true, username: req.user.username});
+  router.get('/session', (req, res) => {
+    res.json({sessionID: req.sessionID});
   });
 
   router.post('/logout', (req, res) => {

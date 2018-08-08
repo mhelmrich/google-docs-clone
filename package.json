@@ -59,6 +59,7 @@
     "axios": "^0.18.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "connect-mongo": "^2.0.1",
     "cookie-parser": "^1.4.3",
     "crypto": "^1.0.1",
     "draft-js": "^0.10.5",
