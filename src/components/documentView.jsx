@@ -85,7 +85,9 @@ export default class DocumentView extends React.Component {
 
 
   render() {
-    if (this.state.draft) return <Draft doc={this.state.doc}/>
+    if (this.state.draft) {
+      return <Draft doc={this.state.doc} changeMenuTitle={this.props.changeMenuTitle} title={this.state.doc.title}/>
+    }
     return (
       <div>
         <IconButton onClick={() => this.setState({

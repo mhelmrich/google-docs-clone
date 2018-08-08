@@ -54,7 +54,7 @@ export default class NavMenu extends React.Component {
           </Popover>
         </AppBar>
         <DocumentView user={this.props.user} socket={this.props.socket}
-          changeMenuTitle={(title) => this.SetState({menuTitle: title})} />
+          changeMenuTitle={(title) => this.setState({menuTitle: title})} />
       </div>
     )
   }

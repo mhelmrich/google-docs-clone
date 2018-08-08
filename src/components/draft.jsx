@@ -27,6 +27,10 @@ export default class Draft extends React.Component {
    this.toggleColor = (toggledColor) => this._toggleColor(toggledColor);
  }
 
+ componentDidMount() {
+   this.props.changeMenuTitle(this.props.title)
+ }
+
 
  getBlockStyle(block) {
     switch (block.getType()) {
