@@ -67,24 +67,6 @@ export default class Draft extends React.Component {
   render() {
     return (<div>
       <Colors />
-      {/*<button onMouseDown={(e) => this._onBoldClick(e)}>BOLD</button>
-      <button onMouseDown={(e) => this._onItalClick(e)}>ITALICS</button>
-      <button onMouseDown={(e) => this._onUnderClick(e)}>UNDERLINE</button>
-      <button onMouseDown={(e) => this._onLeftClick(e)}>Left</button>
-      <button onMouseDown={(e) => this._onCenterClick(e)}>Center</button>
-      <button onMouseDown={(e) => this._onRightClick(e)}>Right</button>
-
-      <TextField
-          id="with-placeholder"
-          label="With placeholder"
-          placeholder="Color Hex Value"
-          className='colorHex'
-          onChange={(events) => this.handleText(events)}
-        />
-      <Editor
-        editorState={this.state.editorState}
-        onChange={this.onChange}
-      /> */}
     </div>);
   }
 }
