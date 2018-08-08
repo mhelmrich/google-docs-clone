@@ -4,7 +4,7 @@ import io from 'socket.io-client';
 import storage from 'electron-json-storage';
 import AppBar from 'material-ui/AppBar';
 import Login from './components/login';
-import Draft from './components/draft';
+import DocumentView from './components/documentView';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -53,7 +53,7 @@ export default class App extends React.Component {
         title="HDocs"
         iconClassNameRight="muidocs-icon-navigation-expand-more"
       />
-      <Draft socket={this.socket}/>
+      <DocumentView user={this.state.user} socket={this.socket}/>
     </div>);
     return <Login login={() => this.login()}/>
   }

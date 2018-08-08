@@ -9,15 +9,18 @@ export default class Draft extends React.Component {
   constructor(props) {
     super(props);
     let editorState = EditorState.createEmpty();
-    if (this.props.content) {
-      editorState = this.getContent(this.props.content);
-    }
     this.state = {
       editorState,
       textAlignment: 'left',
       colorHex: ''
     };
-    this.onChange = (editorState) => this.setState({editorState});
+    this.onChange = (editorState) => {
+      this.setState({editorState});
+      this.props.socket.emit('editorChange', editorState);
+    }
+  }
+  componentDidMount() {
+    if (this.props.doc.content !== 'new') this.setContent(this.props.doc.content);
   }
   getContent() {
     return JSON.stringify(convertToRaw(this.state.editorState.getCurrentContent()));

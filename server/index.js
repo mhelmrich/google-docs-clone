@@ -7,7 +7,8 @@ const connectMongo = require('connect-mongo');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const mongoose = require('mongoose');
-const User = require('./models/User.js');
+const User = require('./models/User');
+const Document = require('./models/Document');
 const auth = require('./routes/auth');
 
 mongoose.connection.on('connected', () => {
@@ -68,6 +69,31 @@ io.on('connection', (socket) => {
         socket.emit('authenticationFailed', err.message);
       });
     });
+  });
+  socket.on('doc', (docID) => {
+    if (socket.user) {
+      Document.findById(docID)
+      .then((doc) => socket.emit('doc', doc))
+      .catch((err) => socket.emit('err', err.message));
+    }
+  });
+  socket.on('newDoc', (title) => {
+    if (socket.user) {
+      const newDoc = new Document({
+        title,
+        content: 'new',
+        owner: socket.user._id,
+      });
+      newDoc.save()
+      .then(() => (
+        User.findByIdAndUpdate(
+          socket.user._id,
+          {$push: {docs: {title: newDoc.title, document: newDoc._id}}},
+        )
+      ))
+      .then(() => socket.emit('doc', newDoc))
+      .catch((err) => socket.emit('err', err.message));
+    }
   });
 });
 
