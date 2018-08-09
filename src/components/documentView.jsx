@@ -119,11 +119,6 @@ export default class DocumentView extends React.Component {
             <CardHeader title={doc.title} subtitle={doc.document} onClick={() => this.props.socket.emit('doc', doc.document)}>
             </CardHeader>
           </Card>
-
-
-          {/*<p onClick={() => this.props.socket.emit('doc', doc.document)}>
-            {doc.title}
-          </p>*/}
         ))}
       </div>
     );
