@@ -97,11 +97,11 @@ io.on('connection', (socket) => {
   });
   socket.on('docChange', (update) => {
     if (socket.user) {
-      console.log('docChange:', update);
       Document.findByIdAndUpdate(
         update.id,
         {$set: {content: update.content}},
-      );
+      ).then(() => (true))
+      .catch((err) => console.log(err));
     }
   });
 });

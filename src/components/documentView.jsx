@@ -1,15 +1,11 @@
 import React from 'react';
 import Draft from './draft';
-import {Card, CardActions, CardHeader, CardContent} from 'material-ui/Card';
+import {Card, CardActions, CardHeader} from 'material-ui/Card';
 import {Add} from 'material-ui-icons';
 import IconButton from 'material-ui/IconButton'
 import TextField from 'material-ui/TextField';
 import Button from 'material-ui/RaisedButton'
 import Dialog from 'material-ui/Dialog'
-import DialogActions from 'material-ui/Dialog'
-import DialogContent from 'material-ui/Dialog'
-import DialogContentText from 'material-ui/Dialog'
-import DialogTitle from 'material-ui/Dialog'
 
 export default class DocumentView extends React.Component {
   constructor(props) {
@@ -18,34 +14,35 @@ export default class DocumentView extends React.Component {
       draft: false,
       doc: null,
       open: false,
-      name: ''
+      newTitle: ''
     };
   }
   componentDidMount() {
     this.props.socket.on('doc', (doc) => {
       this.setState({doc, draft: true, open:false});
-      this.props.toggleDocs()
+      this.props.toggleDocs();
     });
     this.props.socket.on('err', (err) => {
       console.log(err);
     });
   }
 
-  updateName(e) {
+  updateNewTitle(e) {
     this.setState({
-      name: e.target.value
+      newTitle: e.target.value
     })
-    console.log(this.state.name)
   }
   createDoc() {
-    this.props.socket.emit('newDoc', this.state.name);
+    this.props.socket.emit('newDoc', this.state.newTitle);
   }
-
-
 
   render() {
     if (this.state.draft && this.props.showDoc) {
-      return <Draft doc={this.state.doc} changeMenuTitle={this.props.changeMenuTitle} title={this.state.doc.title}/>
+      return (
+        <Draft doc={this.state.doc} title={this.state.doc.title}
+          changeMenuTitle={() => this.props.changeMenuTitle()}
+          user={this.props.user} socket={this.props.socket} />
+      );
     }
     return (
       <div>
@@ -57,28 +54,24 @@ export default class DocumentView extends React.Component {
           title="Create Document"
           modal={false}
           open={this.state.open}
-          onRequestClose={() => this.setState({
-            open:false
-          })}
-        >
-          Name of Document
+          onRequestClose={() => this.setState({open:false})}>
+          Title of new document
           <TextField
-              autoFocus
-              id="name"
-              label="Document Name"
-              type="text"
-              fullWidth
-              onChange={(e) => this.updateName(e)}
-            />
-            <Button onClick={() => this.createDoc()} color="primary">
-              Create
-            </Button>
-      </Dialog>
+            autoFocus
+            id="newTitle"
+            label="Document Title"
+            type="text"
+            onChange={(e) => this.updateNewTitle(e)}
+          />
+          <Button onClick={() => this.createDoc()} color="primary">
+            Create
+          </Button>
+        </Dialog>
 
         <h4>Your documents:</h4>
         {this.props.user.docs.map((doc) => (
-          <Card >
-            <CardHeader title={doc.title} subtitle={doc._id} onClick={() => this.props.socket.emit('doc', doc.document)}>
+          <Card>
+            <CardHeader title={doc.title} subtitle={doc.document} onClick={() => this.props.socket.emit('doc', doc.document)}>
             </CardHeader>
           </Card>
         ))}
