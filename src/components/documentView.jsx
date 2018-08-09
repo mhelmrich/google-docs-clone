@@ -1,10 +1,11 @@
 import React from 'react';
 import Draft from './draft';
 import {Card, CardActions, CardHeader} from 'material-ui/Card';
-import {Add} from 'material-ui-icons';
+import {Add, Share} from 'material-ui-icons';
 import IconButton from 'material-ui/IconButton'
 import TextField from 'material-ui/TextField';
 import Button from 'material-ui/RaisedButton'
+import FlatButton from 'material-ui/FlatButton'
 import Dialog from 'material-ui/Dialog'
 
 export default class DocumentView extends React.Component {
@@ -13,7 +14,9 @@ export default class DocumentView extends React.Component {
     this.state = {
       draft: false,
       doc: null,
+      shareWith: '',
       open: false,
+      openShare: false,
       newTitle: ''
     };
   }
@@ -25,13 +28,28 @@ export default class DocumentView extends React.Component {
     this.props.socket.on('err', (err) => {
       console.log(err);
     });
+    this.props.changeMenuTitle('HDocs')
   }
 
   updateNewTitle(e) {
     this.setState({newTitle: e.target.value});
   }
+  updateShareWith(e) {
+    this.setState({shareWith: e.target.value});
+  }
   createDoc() {
     this.props.socket.emit('newDoc', this.state.newTitle);
+  }
+  share(doc, user) {
+    console.log(doc)
+    console.log(user)
+    this.setState({
+      openShare: false
+    })
+    /*this.props.socket.emit('share', {
+      document: doc,
+      username: user
+    })*/
   }
 
   render() {
@@ -71,6 +89,27 @@ export default class DocumentView extends React.Component {
           <Card>
             <CardHeader title={doc.title} subtitle={doc.document} onClick={() => this.props.socket.emit('doc', doc.document)}>
             </CardHeader>
+            <CardActions>
+              <Button onClick={()=> this.setState({openShare:true})}>Share <Share/></Button>
+              <Dialog
+                title="Share Document"
+                modal={false}
+                open={this.state.openShare}
+                onRequestClose={() => this.setState({openShare:false})}>
+                Share with:
+                <TextField
+                  autoFocus
+                  id="shareUsername"
+                  placeholder="Username"
+                  label="Username"
+                  type="text"
+                  onChange={(e) => this.updateShareWith(e)}
+                />
+                <Button onClick={() => this.share(doc.document, this.state.shareWith)} color="primary">
+                  Share
+                </Button>
+              </Dialog>
+            </CardActions>
           </Card>
         ))}
         <h4>Shared with you:</h4>

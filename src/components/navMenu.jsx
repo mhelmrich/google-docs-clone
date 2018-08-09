@@ -43,7 +43,7 @@ export default class NavMenu extends React.Component {
             onRequestClose={() => this.setState({showMenu: false})}>
             <Menu>
               <MenuItem onClick={(e) => this.setState({
-                showDoc: !this.state.showDoc,
+                showDoc: false,//!this.state.showDoc,
                 showMenu:false
               })}>
                 My Documents
