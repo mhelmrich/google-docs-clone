@@ -14,10 +14,11 @@ export default class DocumentView extends React.Component {
     this.state = {
       draft: false,
       doc: null,
-      shareWith: '',
       open: false,
+      newTitle: '',
       openShare: false,
-      newTitle: ''
+      shareWith: '',
+      shareDoc: null,
     };
   }
   componentDidMount() {
@@ -40,17 +41,9 @@ export default class DocumentView extends React.Component {
   createDoc() {
     this.props.socket.emit('newDoc', this.state.newTitle);
   }
-  share(doc, user, docTitle) {
-    console.log(doc)
-    console.log(user)
-    this.setState({
-      openShare: false
-    })
-    this.props.socket.emit('share', {
-      document: doc,
-      username: user,
-      title: docTitle
-    })
+  share() {
+    this.props.socket.emit('share', {doc: this.state.shareDoc, username: this.state.shareWith});
+    this.setState({openShare: false, shareWith: '', shareDoc: null});
   }
 
   render() {
@@ -88,10 +81,12 @@ export default class DocumentView extends React.Component {
         <h4>Your documents:</h4>
         {this.props.user.docs.map((doc) => (
           <Card>
-            <CardHeader title={doc.title} subtitle={doc.document} onClick={() => this.props.socket.emit('doc', doc.document)}>
-            </CardHeader>
+            <CardHeader title={doc.title} subtitle={doc.document}
+              onClick={() => this.props.socket.emit('doc', doc.document)} />
             <CardActions>
-              <Button onClick={()=> this.setState({openShare:true})}>Share <Share/></Button>
+              <Button onClick={() => this.setState({openShare: true, shareDoc: doc})}>
+                Share <Share />
+              </Button>
               <Dialog
                 title="Share Document"
                 modal={false}
@@ -106,7 +101,7 @@ export default class DocumentView extends React.Component {
                   type="text"
                   onChange={(e) => this.updateShareWith(e)}
                 />
-                <Button onClick={() => this.share(doc.document, this.state.shareWith, doc.title)} color="primary">
+                <Button onClick={() => this.share()} color="primary">
                   Share
                 </Button>
               </Dialog>

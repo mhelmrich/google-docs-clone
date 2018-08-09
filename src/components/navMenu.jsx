@@ -13,8 +13,16 @@ export default class NavMenu extends React.Component {
       menuTitle: 'HDocs',
       anchorEl: null,
       showMenu: false,
-      showDoc: false
+      showDoc: false,
+      user: this.props.user,
     };
+  }
+  componentDidMount() {
+    this.props.socket.on('docs', (docs) => {
+      this.props.user.docs = docs.docs;
+      this.props.user.sharedDocs = docs.sharedDocs;
+      this.setState({showDoc: false, showMenu: false});
+    });
   }
   render() {
     const avatars = [(
@@ -42,10 +50,7 @@ export default class NavMenu extends React.Component {
             targetOrigin={{horizontal: 'left', vertical: 'top'}}
             onRequestClose={() => this.setState({showMenu: false})}>
             <Menu>
-              <MenuItem onClick={(e) => this.setState({
-                showDoc: false,//!this.state.showDoc,
-                showMenu:false
-              })}>
+              <MenuItem onClick={() => this.props.socket.emit('getDocs')}>
                 My Documents
               </MenuItem>
               <MenuItem onClick={(e) => this.setState({showMenu:false})}>
