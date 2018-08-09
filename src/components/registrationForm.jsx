@@ -2,6 +2,7 @@ import React from 'react';
 import Paper from 'material-ui/Paper';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton'
+import FlatButton from 'material-ui/FlatButton'
 
 export default class RegistrationForm extends React.Component {
   constructor(props) {
@@ -38,8 +39,12 @@ export default class RegistrationForm extends React.Component {
               placeholder="Confirm Password" onChange={(e) => this.setState({confirm: e.target.value})}
             />
           <br/>
-          <RaisedButton onClick={() => this.submit()}>Register</RaisedButton>
-          <RaisedButton onClick={this.props.toLogin}>Login here</RaisedButton>
+          <RaisedButton label="Register" primary={true} onClick={() => this.submit()}></RaisedButton>
+          <br/> <br/>
+          <FlatButton label="Sign in instead" primary={true} onClick={this.props.toLogin}/>
+
+          {/*<RaisedButton onClick={() => this.submit()}>Register</RaisedButton>
+          <RaisedButton onClick={this.props.toLogin}>Login here</RaisedButton>*/}
         </Paper>
         {/*<input id="email" type="text" placeholder="Email Address"
           onChange={(e) => this.setState({email: e.target.value})}/>
