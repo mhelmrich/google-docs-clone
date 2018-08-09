@@ -40,16 +40,17 @@ export default class DocumentView extends React.Component {
   createDoc() {
     this.props.socket.emit('newDoc', this.state.newTitle);
   }
-  share(doc, user) {
+  share(doc, user, docTitle) {
     console.log(doc)
     console.log(user)
     this.setState({
       openShare: false
     })
-    /*this.props.socket.emit('share', {
+    this.props.socket.emit('share', {
       document: doc,
-      username: user
-    })*/
+      username: user,
+      title: docTitle
+    })
   }
 
   render() {
@@ -105,7 +106,7 @@ export default class DocumentView extends React.Component {
                   type="text"
                   onChange={(e) => this.updateShareWith(e)}
                 />
-                <Button onClick={() => this.share(doc.document, this.state.shareWith)} color="primary">
+                <Button onClick={() => this.share(doc.document, this.state.shareWith, doc.title)} color="primary">
                   Share
                 </Button>
               </Dialog>
@@ -114,9 +115,15 @@ export default class DocumentView extends React.Component {
         ))}
         <h4>Shared with you:</h4>
         {this.props.user.sharedDocs.map((doc) => (
-          <p onClick={() => this.props.socket.emit('doc', doc.document)}>
+          <Card>
+            <CardHeader title={doc.title} subtitle={doc.document} onClick={() => this.props.socket.emit('doc', doc.document)}>
+            </CardHeader>
+          </Card>
+
+
+          {/*<p onClick={() => this.props.socket.emit('doc', doc.document)}>
             {doc.title}
-          </p>
+          </p>*/}
         ))}
       </div>
     );
