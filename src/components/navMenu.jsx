@@ -27,7 +27,7 @@ export default class NavMenu extends React.Component {
   render() {
     const avatars = [(
       <Avatar style={{margin: 10, color: '#fff', backgroundColor: 'orange'}}>
-        M
+        {this.props.user.username[0]}
       </Avatar>
       ),
       (<Avatar style={{margin: 10, color: '#fff', backgroundColor: 'red'}}>
@@ -50,7 +50,14 @@ export default class NavMenu extends React.Component {
             targetOrigin={{horizontal: 'left', vertical: 'top'}}
             onRequestClose={() => this.setState({showMenu: false})}>
             <Menu>
+<<<<<<< HEAD
               <MenuItem onClick={(e) => this.props.socket.emit('getDocs')}>
+=======
+              <MenuItem onClick={(e) => this.setState({
+                showDoc: false,//!this.state.showDoc,
+                showMenu:false
+              })}>
+>>>>>>> 55971372d9e73e9c7d837d75187b29bd9989da74
                 My Documents
               </MenuItem>
               <MenuItem onClick={(e) => this.setState({showMenu:false})}>
