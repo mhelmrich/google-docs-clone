@@ -92,13 +92,12 @@ io.on('connection', (socket) => {
     }
   });
   socket.on('share', (data) => {
-    if (socket.user.docs.filter((doc) => (doc.document.toString() === data.doc.document.toString())).length > 0) {
-      User.findOneAndUpdate(
-        {username: data.username},
-        {$push: {sharedDocs: data.doc}},
-        {new: true}
-      )
-    }
+    User.findOneAndUpdate(
+      {username: data.username},
+      {$push: {sharedDocs: data.doc}},
+      {new: true},
+    )
+    .then(() => (socket.emit('shareSuccessful', data.username)));
   });
   socket.on('newDoc', (title) => {
     if (socket.user) {
@@ -123,13 +122,13 @@ io.on('connection', (socket) => {
   });
   socket.on('docChange', (update) => {
     if (socket.user) {
+      socket.broadcast.emit('docChange', update.content);
       Document.findByIdAndUpdate(
         update.id,
         {$set: {content: update.content}},
         {new: true},
       )
-      .then((doc) => (socket.broadcast.emit('docChange', doc)))
-      .catch((err) => console.log(err));
+      .then(() => (true));
     }
   });
 });
