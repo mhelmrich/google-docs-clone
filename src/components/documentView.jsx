@@ -19,7 +19,7 @@ export default class DocumentView extends React.Component {
   }
   componentDidMount() {
     this.props.socket.on('doc', (doc) => {
-      this.setState({doc, draft: true, open:false});
+      this.setState({doc, draft: true, open: false});
       this.props.toggleDocs();
     });
     this.props.socket.on('err', (err) => {
@@ -28,9 +28,7 @@ export default class DocumentView extends React.Component {
   }
 
   updateNewTitle(e) {
-    this.setState({
-      newTitle: e.target.value
-    })
+    this.setState({newTitle: e.target.value});
   }
   createDoc() {
     this.props.socket.emit('newDoc', this.state.newTitle);
@@ -39,17 +37,17 @@ export default class DocumentView extends React.Component {
   render() {
     if (this.state.draft && this.props.showDoc) {
       return (
-        <Draft doc={this.state.doc} title={this.state.doc.title}
-          changeMenuTitle={() => this.props.changeMenuTitle()}
+        <Draft doc={this.state.doc}
+          changeMenuTitle={(title) => this.props.changeMenuTitle(title)}
           user={this.props.user} socket={this.props.socket} />
       );
     }
     return (
       <div>
         {/*Following IconButton and Dialog prompt the user for a document title before creating the request new document*/}
-        <IconButton onClick={() => this.setState({
-          open:true
-        })}> <Add /> </IconButton>
+        <IconButton onClick={() => this.setState({open:true})}>
+          <Add />
+        </IconButton>
         <Dialog
           title="Create Document"
           modal={false}

@@ -22,12 +22,12 @@ export default class Draft extends React.Component {
   }
 
   componentDidMount() {
-    this.props.changeMenuTitle(this.props.title);
+    console.log(this.props.doc);
+    this.props.changeMenuTitle(this.props.doc.title);
     if (this.props.doc.content !== 'new') this.setContent(this.props.doc.content);
   }
 
   onChange = (editorState) => {
-    console.log(this.getContent(editorState));
     this.setState({editorState});
     const content = this.getContent(editorState);
     this.props.socket.emit('docChange', {id: this.props.doc._id, content});
