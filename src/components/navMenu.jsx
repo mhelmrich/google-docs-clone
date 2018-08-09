@@ -19,7 +19,7 @@ export default class NavMenu extends React.Component {
   render() {
     const avatars = [(
       <Avatar style={{margin: 10, color: '#fff', backgroundColor: 'orange'}}>
-        M
+        {this.props.user.username[0]}
       </Avatar>
       ),
       (<Avatar style={{margin: 10, color: '#fff', backgroundColor: 'red'}}>
