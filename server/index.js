@@ -73,19 +73,32 @@ io.on('connection', (socket) => {
   socket.on('doc', (docID) => {
     if (socket.user) {
       Document.findById(docID)
-      .then((doc) => socket.emit('doc', doc))
+      .then((doc) => {
+        socket.emit('doc', doc);
+        socket.join(docID.toString(), () => {
+          socket.docID = docID.toString();
+        });
+      })
       .catch((err) => socket.emit('err', err.message));
     }
   });
   socket.on('getDocs', () => {
-    socket.emit('docs', {docs: socket.user.docs, sharedDocs: socket.user.sharedDocs});
+    if (socket.user) {
+      if (socket.docID) {
+        socket.leave(socket.docID);
+        socket.docID = null;
+      }
+      socket.emit('docs', {docs: socket.user.docs, sharedDocs: socket.user.sharedDocs});
+    }
   });
   socket.on('share', (data) => {
-    User.findOneAndUpdate(
-      {username: data.username},
-      {$push: {sharedDocs: data.doc}},
-      {new: true}
-    )
+    if (socket.user.docs.filter((doc) => (doc.document.toString() === data.doc.document.toString())).length > 0) {
+      User.findOneAndUpdate(
+        {username: data.username},
+        {$push: {sharedDocs: data.doc}},
+        {new: true}
+      )
+    }
   });
   socket.on('newDoc', (title) => {
     if (socket.user) {
@@ -113,7 +126,9 @@ io.on('connection', (socket) => {
       Document.findByIdAndUpdate(
         update.id,
         {$set: {content: update.content}},
-      ).then(() => (true))
+        {new: true},
+      )
+      .then((doc) => (socket.broadcast.emit('docChange', doc)))
       .catch((err) => console.log(err));
     }
   });
