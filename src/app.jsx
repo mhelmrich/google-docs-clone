@@ -47,7 +47,7 @@ export default class App extends React.Component {
     });
   }
   render() {
-    if (!this.state.loggedIn) return <CircularProgress className="Loading" />;//<h2>Loading...</h2>;
+    if (!this.state.loggedIn) return <div className="loading"><CircularProgress /></div>;
     if (this.state.loggedIn < 0) return <Login login={() => this.login()} />;
     return <NavMenu user={this.state.user} socket={this.socket} logout={() => this.logout()}/>;
   }
