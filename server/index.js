@@ -97,7 +97,13 @@ io.on('connection', (socket) => {
       {$push: {sharedDocs: data.doc}},
       {new: true},
     )
-    .then(() => (socket.emit('shareSuccessful', data.username)));
+    .then((user) => {
+      if(user){
+        socket.emit('shareSuccessful', data.username);
+      } else {
+        socket.emit('shareUnsuccessful', data.username);
+      }
+    });
   });
   socket.on('newDoc', (title) => {
     if (socket.user) {

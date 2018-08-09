@@ -29,10 +29,7 @@ export default class NavMenu extends React.Component {
       <Avatar style={{margin: 10, color: '#fff', backgroundColor: 'orange'}}>
         {this.props.user.username[0]}
       </Avatar>
-      ),
-      (<Avatar style={{margin: 10, color: '#fff', backgroundColor: 'red'}}>
-        D
-      </Avatar>)];
+      )];
     return (
       <div>
         <AppBar
