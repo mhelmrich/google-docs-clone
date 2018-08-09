@@ -77,6 +77,15 @@ io.on('connection', (socket) => {
       .catch((err) => socket.emit('err', err.message));
     }
   });
+  socket.on('getDocs', () => {
+    socket.emit('docs', {docs: socket.user.docs, sharedDocs: socket.user.sharedDocs});
+  });
+  socket.on('share', (data) => {
+    User.findOneAndUpdate(
+      {username: data.username},
+      {$push: {sharedDocs: {title: data.title, document: data.document}}},
+    );
+  });
   socket.on('newDoc', (title) => {
     if (socket.user) {
       const newDoc = new Document({
@@ -89,7 +98,10 @@ io.on('connection', (socket) => {
         User.findByIdAndUpdate(
           socket.user._id,
           {$push: {docs: {title: newDoc.title, document: newDoc._id}}},
-        )
+          {new: true},
+        ).then((user) => {
+          socket.user = user;
+        })
       ))
       .then(() => socket.emit('doc', newDoc))
       .catch((err) => socket.emit('err', err.message));
