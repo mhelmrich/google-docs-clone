@@ -21,7 +21,8 @@ export default class DocumentView extends React.Component {
       openShare: false,
       shareWith: '',
       shareDoc: null,
-      showSuccess: false
+      showSuccess: false,
+      successMessage: ''
     };
   }
   componentDidMount() {
@@ -34,7 +35,13 @@ export default class DocumentView extends React.Component {
     });
     this.props.changeMenuTitle('HDocs')
     this.props.socket.on('shareSuccessful', (user) => {
-      this.setState({showSuccess: true})
+      var message = 'Successfully shared to ' + user + '!';
+      this.setState({successMessage: message,
+        showSuccess: true})
+    })
+    this.props.socket.on('shareUnsuccessful', (user) => {
+      this.setState({successMessage: user + ' not found',
+        showSuccess: true})
     })
   }
 
@@ -108,7 +115,7 @@ export default class DocumentView extends React.Component {
                     ContentProps={{
                       'aria-describedby': 'message-id',
                     }}
-                    message={<span id="message-id">Share successful!</span>}
+                    message={<span id="message-id">{this.state.successMessage}</span>}
                     action={[
 
                       <IconButton
