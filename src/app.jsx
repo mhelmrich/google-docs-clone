@@ -4,6 +4,7 @@ import io from 'socket.io-client';
 import storage from 'electron-json-storage';
 import Login from './components/login';
 import NavMenu from './components/navMenu';
+import CircularProgress from 'material-ui/CircularProgress';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -46,7 +47,7 @@ export default class App extends React.Component {
     });
   }
   render() {
-    if (!this.state.loggedIn) return <h2>Loading...</h2>;
+    if (!this.state.loggedIn) return <CircularProgress className="Loading" />;//<h2>Loading...</h2>;
     if (this.state.loggedIn < 0) return <Login login={() => this.login()} />;
     return <NavMenu user={this.state.user} socket={this.socket} logout={() => this.logout()}/>;
   }
