@@ -3,6 +3,8 @@ import Paper from 'material-ui/Paper';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton'
 import FlatButton from 'material-ui/FlatButton'
+import {AccountCircle} from 'material-ui-icons'
+import Avatar from 'material-ui/Avatar';
 
 export default class RegistrationForm extends React.Component {
   constructor(props) {
@@ -23,6 +25,8 @@ export default class RegistrationForm extends React.Component {
     return (
       <div id="registrationForm">
         <Paper style={{padding:100}}>
+          <AccountCircle style={{paddingLeft: 75, opacity: 0.5, height: 75, width: 75}}/>
+          <br/>
           <TextField autoFocus id="email" label="Email Address" type="email"
               placeholder="Email Address" onChange={(e) => this.setState({email: e.target.value})}
             />
