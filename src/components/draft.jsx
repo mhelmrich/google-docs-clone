@@ -22,7 +22,6 @@ export default class Draft extends React.Component {
   }
 
   componentDidMount() {
-    console.log(this.props.doc);
     this.props.changeMenuTitle(this.props.doc.title);
     if (this.props.doc.content !== 'new') this.setContent(this.props.doc.content);
   }

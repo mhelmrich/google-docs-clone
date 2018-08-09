@@ -83,8 +83,9 @@ io.on('connection', (socket) => {
   socket.on('share', (data) => {
     User.findOneAndUpdate(
       {username: data.username},
-      {$push: {sharedDocs: {title: data.title, document: data.document}}},
-    );
+      {$push: {sharedDocs: data.doc}},
+      {new: true}
+    )
   });
   socket.on('newDoc', (title) => {
     if (socket.user) {
