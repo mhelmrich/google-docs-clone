@@ -19,8 +19,8 @@ export default class LoginForm extends React.Component {
           onChange={(e) => this.setState({username: e.target.value})}/>
         <input id="password" type="password" placeholder="Password"
           onChange={(e) => this.setState({password: e.target.value})}/>
-        <button onClick={() => this.submit()}>Log in</button>
-        <button onClick={this.props.toRegistration}>Register here</button>
+        {/*<button onClick={() => this.submit()}>Log in</button>
+        <button onClick={this.props.toRegistration}>Register here</button>*/}
         <RaisedButton onClick={() => this.submit()}>Login</RaisedButton>
         <RaisedButton onClick={this.props.toRegistration}>Register</RaisedButton>
       </div>

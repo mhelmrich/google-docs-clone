@@ -11,48 +11,6 @@ import DialogContent from 'material-ui/Dialog'
 import DialogContentText from 'material-ui/Dialog'
 import DialogTitle from 'material-ui/Dialog'
 
-class PromptNew extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      open: false
-    }
-  }
-
-
-  handleClickOpen = () =>{
-    this.setState({ open: true });
-  };
-
-  handleClose = () => {
-    this.setState({ open: false });
-  };
-
-  render() {
-    console.log(this.state.open)
-    return (
-      <div>
-        <IconButton onClick={() => this.setState({
-          open:true
-        })}> <Add /> </IconButton>
-        <Dialog
-          title="Create Document"
-          modal={false}
-          open={this.state.open}
-          onRequestClose={() => this.setState({
-            open:false
-          })}
-        >
-          Name of Document
-            <Button onClick={() => this.props.createDoc()} color="primary">
-              Create
-            </Button>
-      </Dialog>
-        </div>
-    )
-  }
-}
-
 export default class DocumentView extends React.Component {
   constructor(props) {
     super(props);
@@ -65,7 +23,7 @@ export default class DocumentView extends React.Component {
   }
   componentDidMount() {
     this.props.socket.on('doc', (doc) => {
-      this.setState({doc, draft: true});
+      this.setState({doc, draft: true, open:false});
       this.props.toggleDocs()
     });
     this.props.socket.on('err', (err) => {
@@ -91,6 +49,7 @@ export default class DocumentView extends React.Component {
     }
     return (
       <div>
+        {/*Following IconButton and Dialog prompt the user for a document title before creating the request new document*/}
         <IconButton onClick={() => this.setState({
           open:true
         })}> <Add /> </IconButton>
