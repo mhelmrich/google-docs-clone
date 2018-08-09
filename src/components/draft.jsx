@@ -24,7 +24,7 @@ export default class Draft extends React.Component {
   componentDidMount() {
     this.props.changeMenuTitle(this.props.doc.title);
     if (this.props.doc.content !== 'new') this.setContent(this.props.doc.content);
-    this.props.socket.on('docChange', (doc) => this.setContent(doc.content));
+    this.props.socket.on('docChange', (content) => this.setContent(content));
   }
 
   onChange = (editorState) => {
