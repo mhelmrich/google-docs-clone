@@ -48,6 +48,6 @@ export default class App extends React.Component {
   render() {
     if (!this.state.loggedIn) return <h2>Loading...</h2>;
     if (this.state.loggedIn < 0) return <Login login={() => this.login()} />;
-    return <NavMenu user={this.state.user} socket={this.socket} />;
+    return <NavMenu user={this.state.user} socket={this.socket} logout={() => this.logout()}/>;
   }
 }

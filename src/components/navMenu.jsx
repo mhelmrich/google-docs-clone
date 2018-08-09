@@ -51,7 +51,7 @@ export default class NavMenu extends React.Component {
               <MenuItem onClick={(e) => this.setState({showMenu:false})}>
                 Share Documents
               </MenuItem>
-              <MenuItem onClick={(e) => this.logout()}>
+              <MenuItem onClick={(e) => this.props.logout()}>
                 Logout
               </MenuItem>
             </Menu>
