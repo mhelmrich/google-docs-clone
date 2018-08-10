@@ -40,6 +40,7 @@ export default class NavMenu extends React.Component {
             showMenu: true
           })}>
           {avatars[0]} {avatars[1]}
+          {/* Dropdown menu for the naviation side bar*/}
           <Popover
             open={this.state.showMenu}
             anchorEl={this.state.anchorEl}
