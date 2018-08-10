@@ -96,14 +96,36 @@ io.on('connection', (socket) => {
       {username: data.username},
       {$push: {sharedDocs: data.doc}},
       {new: true},
-    )
-    .then((user) => {
-      if(user){
-        socket.emit('shareSuccessful', data.username);
+    ).then((user) => {
+      if (user) {
+        Document.findByIdAndUpdate(
+          data.doc.document,
+          {$push: {sharedWith: user._id}},
+        ).then(() => socket.emit('shareSuccessful', data.username));
       } else {
         socket.emit('shareUnsuccessful', data.username);
       }
     });
+  });
+  socket.on('delete', (docRef) => {
+    if (socket.user._id.toString() === docRef.owner.toString()) {
+      Document.findById(docRef.document)
+      .then((doc) => {
+        const promises = doc.sharedWith.map(id =>
+          (User.findByIdAndUpdate(id, {$pull: {sharedDocs: {document: docRef.document}}})));
+        Promise.all(promises)
+        .then(() => (doc.remove()))
+        .then(() => (User.findByIdAndUpdate(docRef.owner,
+          {$pull: {docs: {document: docRef.document}}},
+          {new: true},
+        )))
+        .then((user) => {
+          socket.user = user;
+          socket.emit('deleteSuccessful', docRef.title);
+        })
+        .catch(() => socket.emit('deleteUnSuccessful', docRef.title));
+      }).catch(() => socket.emit('deleteUnSuccessful', docRef.title));
+    }
   });
   socket.on('newDoc', (title) => {
     if (socket.user) {
@@ -116,7 +138,7 @@ io.on('connection', (socket) => {
       .then(() => (
         User.findByIdAndUpdate(
           socket.user._id,
-          {$push: {docs: {title: newDoc.title, document: newDoc._id}}},
+          {$push: {docs: {title: newDoc.title, document: newDoc._id, owner: socket.user._id}}},
           {new: true},
         ).then((user) => {
           socket.user = user;

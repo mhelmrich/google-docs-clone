@@ -21,28 +21,33 @@ export default class DocumentView extends React.Component {
       openShare: false,
       shareWith: '',
       shareDoc: null,
-      showSuccess: false,
-      successMessage: ''
+      showMessage: false,
+      message: '',
     };
   }
   componentDidMount() {
+    this.props.changeMenuTitle('HDocs');
     this.props.socket.on('doc', (doc) => {
       this.setState({doc, draft: true, open: false});
       this.props.toggleDocs();
     });
-    this.props.socket.on('err', (err) => {
-      console.log(err);
-    });
-    this.props.changeMenuTitle('HDocs')
+    this.props.socket.on('err', (err) => console.log(err));
     this.props.socket.on('shareSuccessful', (user) => {
-      var message = 'Successfully shared to ' + user + '!';
-      this.setState({successMessage: message,
-        showSuccess: true})
-    })
+      const message = `Successfully shared to ${user}!`;
+      this.setState({message, showMessage: true});
+    });
     this.props.socket.on('shareUnsuccessful', (user) => {
-      this.setState({successMessage: user + ' not found',
-        showSuccess: true})
-    })
+      const message = `${user} not found!`;
+      this.setState({message, showMessage: true});
+    });
+    this.props.socket.on('deleteSuccessful', (title) => {
+      const message = `Successfully deleted ${title}!`;
+      this.setState({message, showMessage: true});
+    });
+    this.props.socket.on('deleteUnsuccessful', (title) => {
+      const message = `Could not delete ${title}!`;
+      this.setState({message, showMessage: true});
+    });
   }
 
   updateNewTitle(e) {
@@ -98,42 +103,30 @@ export default class DocumentView extends React.Component {
                 <CardHeader title={doc.title} subtitle={doc.document}
                   onClick={() => this.props.socket.emit('doc', doc.document)} />
                 <CardActions>
-                  <Button onClick={() => {
-                    this.setState({openShare: true, shareDoc: doc})
-                  }}>
+                  <Button onClick={() => this.setState({openShare: true, shareDoc: doc})}>
                     Share <Share />
                   </Button>
+                  <Button onClick={() => this.props.socket.emit('delete', doc)}>
+                    Delete
+                  </Button>
                   <Snackbar
-                    anchorOrigin={{
-                      vertical: 'bottom',
-                      horizontal: 'left',
-                    }}
-                    open={this.state.showSuccess}
-                    onClose={() => this.setState({
-                      showSuccess: false
-                    })}
-                    ContentProps={{
-                      'aria-describedby': 'message-id',
-                    }}
-                    message={<span id="message-id">{this.state.successMessage}</span>}
+                    anchorOrigin={{vertical: 'bottom', horizontal: 'left'}}
+                    open={this.state.showMessage}
+                    onClose={() => this.setState({showMessage: false})}
+                    ContentProps={{'aria-describedby': 'message-id'}}
+                    message={<span id="message-id">{this.state.message}</span>}
                     action={[
-
                       <IconButton
                         key="close"
                         aria-label="Close"
                         color="inherit"
                         className="Close"
-                        onClick={() => this.setState({
-                          showSuccess: false
-                        })}
+                        onClick={() => this.setState({showMessage: false})}
                       >
-                        <Close style={{
-                          fill: 'white'
-                        }}/>
+                        <Close style={{fill: 'white'}} />
                       </IconButton>,
                     ]}
                   />
-
                   <Dialog
                     title="Share Document"
                     modal={false}

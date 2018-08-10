@@ -10,6 +10,11 @@ const documentRef = new mongoose.Schema({
     ref: 'Document',
     required: true,
   },
+  owner: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'User',
+    required: true,
+  },
 });
 
 const userSchema = new mongoose.Schema({

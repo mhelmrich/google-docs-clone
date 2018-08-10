@@ -13,6 +13,7 @@ const documentSchema = new mongoose.Schema({
     type: mongoose.Schema.ObjectId,
     required: true,
   },
+  sharedWith: [mongoose.Schema.ObjectId],
 });
 
 const Document = mongoose.model('Document', documentSchema);
