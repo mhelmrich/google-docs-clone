@@ -48,6 +48,14 @@ export default class DocumentView extends React.Component {
       const message = `Could not delete ${title}!`;
       this.setState({message, showMessage: true});
     });
+    this.props.socket.on('removeSuccessful', (title) => {
+      const message = `Successfully removed ${title}!`;
+      this.setState({message, showMessage: true});
+    });
+    this.props.socket.on('removeUnsuccessful', (title) => {
+      const message = `Could not remove ${title}!`;
+      this.setState({message, showMessage: true});
+    });
   }
 
   updateNewTitle(e) {
@@ -62,6 +70,14 @@ export default class DocumentView extends React.Component {
   share() {
     this.props.socket.emit('share', {doc: this.state.shareDoc, username: this.state.shareWith});
     this.setState({openShare: false, shareWith: '', shareDoc: null});
+  }
+  delete(e, doc) {
+    e.stopPropagation();
+    this.props.socket.emit('delete', doc);
+  }
+  remove(e, doc) {
+    e.stopPropagation();
+    this.props.socket.emit('remove', doc);
   }
 
   render() {
@@ -106,7 +122,7 @@ export default class DocumentView extends React.Component {
                   <Button onClick={() => this.setState({openShare: true, shareDoc: doc})}>
                     Share <Share />
                   </Button>
-                  <Button onClick={() => this.props.socket.emit('delete', doc)}>
+                  <Button onClick={(e) => this.delete(e, doc)}>
                     Delete
                   </Button>
                   <Snackbar
@@ -153,6 +169,11 @@ export default class DocumentView extends React.Component {
           {this.props.user.sharedDocs.map((doc) => (
             <Card>
               <CardHeader title={doc.title} subtitle={doc.document} onClick={() => this.props.socket.emit('doc', doc.document)}>
+                <CardActions>
+                  <Button onClick={(e) => this.remove(e, doc)}>
+                    Remove
+                  </Button>
+                </CardActions>
               </CardHeader>
             </Card>
           ))}

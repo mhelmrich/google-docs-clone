@@ -127,6 +127,15 @@ io.on('connection', (socket) => {
       }).catch(() => socket.emit('deleteUnSuccessful', docRef.title));
     }
   });
+  socket.on('remove', (docRef) => {
+    User.findByIdAndUpdate(socket.user._id,
+      {$pull: {sharedDocs: {document: docRef.document}}})
+    .then((user) => {
+      socket.user = user;
+      socket.emit('removeSuccessful', docRef.title);
+    })
+    .catch(() => socket.emit('removeUnSuccessful', docRef.title));
+  });
   socket.on('newDoc', (title) => {
     if (socket.user) {
       const newDoc = new Document({
