@@ -21,7 +21,7 @@ export default class DocumentView extends React.Component {
       openShare: false,
       shareWith: '',
       shareDoc: null,
-      showMessage: false,
+      showMsg: false,
       message: '',
     };
   }
@@ -32,32 +32,29 @@ export default class DocumentView extends React.Component {
       this.props.toggleDocs();
     });
     this.props.socket.on('err', (err) => console.log(err));
-    this.props.socket.on('shareSuccessful', (user) => {
-      const message = `Successfully shared to ${user}!`;
-      this.setState({message, showMessage: true});
+    this.props.socket.on('shareSuccessful', (username) => {
+      this.notify(`Successfully shared to ${username}!`, 2000);
     });
-    this.props.socket.on('shareUnsuccessful', (user) => {
-      const message = `${user} not found!`;
-      this.setState({message, showMessage: true});
+    this.props.socket.on('shareUnsuccessful', (username) => {
+      this.notify(`${username} not found!`, 2000);
     });
     this.props.socket.on('deleteSuccessful', (title) => {
-      const message = `Successfully deleted ${title}!`;
-      this.setState({message, showMessage: true});
+      this.notify(`Successfully deleted ${title}!`, 2000);
     });
     this.props.socket.on('deleteUnsuccessful', (title) => {
-      const message = `Could not delete ${title}!`;
-      this.setState({message, showMessage: true});
+      this.notify(`Could not delete ${title}!`, 2000);
     });
     this.props.socket.on('removeSuccessful', (title) => {
-      const message = `Successfully removed ${title}!`;
-      this.setState({message, showMessage: true});
+      this.notify(`Successfully removed ${title}!`, 2000);
     });
     this.props.socket.on('removeUnsuccessful', (title) => {
-      const message = `Could not remove ${title}!`;
-      this.setState({message, showMessage: true});
+      this.notify(`Could not remove ${title}!`, 2000);
     });
   }
-
+  notify(message, duration) {
+    this.setState({message, showMsg: true});
+    setTimeout(this.setState.bind(this, {message: '', showMsg: false}), duration);
+  }
   updateNewTitle(e) {
     this.setState({newTitle: e.target.value});
   }
@@ -127,8 +124,8 @@ export default class DocumentView extends React.Component {
                   </Button>
                   <Snackbar
                     anchorOrigin={{vertical: 'bottom', horizontal: 'left'}}
-                    open={this.state.showMessage}
-                    onClose={() => this.setState({showMessage: false})}
+                    open={this.state.showMsg}
+                    onClose={() => this.setState({showMsg: false})}
                     ContentProps={{'aria-describedby': 'message-id'}}
                     message={<span id="message-id">{this.state.message}</span>}
                     action={[
@@ -137,7 +134,7 @@ export default class DocumentView extends React.Component {
                         aria-label="Close"
                         color="inherit"
                         className="Close"
-                        onClick={() => this.setState({showMessage: false})}
+                        onClick={() => this.setState({showMsg: false})}
                       >
                         <Close style={{fill: 'white'}} />
                       </IconButton>,
