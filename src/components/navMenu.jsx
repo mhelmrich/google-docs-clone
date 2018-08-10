@@ -18,7 +18,7 @@ export default class NavMenu extends React.Component {
     };
   }
   componentDidMount() {
-    this.props.socket.on('docs', (docs) => {
+    this.props.socket.on('left', (docs) => {
       this.props.user.docs = docs.docs;
       this.props.user.sharedDocs = docs.sharedDocs;
       this.setState({showDoc: false, showMenu: false});
@@ -48,7 +48,7 @@ export default class NavMenu extends React.Component {
             targetOrigin={{horizontal: 'left', vertical: 'top'}}
             onRequestClose={() => this.setState({showMenu: false})}>
             <Menu>
-              <MenuItem onClick={() => this.props.socket.emit('getDocs')}>
+              <MenuItem onClick={() => this.props.socket.emit('leaveDoc')}>
                 My Documents
               </MenuItem>
               <MenuItem onClick={(e) => this.setState({showMenu:false})}>

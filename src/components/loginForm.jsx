@@ -31,7 +31,7 @@ export default class LoginForm extends React.Component {
               placeholder="Username" onChange={(e) => this.setState({username: e.target.value})}
             />
           <br/>
-          <TextField autoFocus id="password" label="Document Name" type="text"
+          <TextField autoFocus id="password" label="Document Name" type="password"
               placeholder="Password" onChange={(e) => this.setState({password: e.target.value})}
             />
           <br/>

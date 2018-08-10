@@ -4,6 +4,20 @@ html, body {
 #App {
   height: 100%;
 }
+#loginForm {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#registrationForm {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .loading {
   height: 100%;
   width: 100%;

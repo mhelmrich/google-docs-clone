@@ -82,15 +82,6 @@ io.on('connection', (socket) => {
       .catch((err) => socket.emit('err', err.message));
     }
   });
-  socket.on('getDocs', () => {
-    if (socket.user) {
-      if (socket.docID) {
-        socket.leave(socket.docID);
-        socket.docID = null;
-      }
-      socket.emit('docs', {docs: socket.user.docs, sharedDocs: socket.user.sharedDocs});
-    }
-  });
   socket.on('share', (data) => {
     User.findOneAndUpdate(
       {username: data.username},
@@ -122,6 +113,7 @@ io.on('connection', (socket) => {
         .then((user) => {
           socket.user = user;
           socket.emit('deleteSuccessful', docRef.title);
+          socket.emit('update', {docs: socket.user.docs, sharedDocs: socket.user.sharedDocs});
         })
         .catch(() => socket.emit('deleteUnSuccessful', docRef.title));
       }).catch(() => socket.emit('deleteUnSuccessful', docRef.title));
@@ -133,6 +125,7 @@ io.on('connection', (socket) => {
     .then((user) => {
       socket.user = user;
       socket.emit('removeSuccessful', docRef.title);
+      socket.emit('update', {docs: socket.user.docs, sharedDocs: socket.user.sharedDocs});
     })
     .catch(() => socket.emit('removeUnSuccessful', docRef.title));
   });
@@ -151,6 +144,7 @@ io.on('connection', (socket) => {
           {new: true},
         ).then((user) => {
           socket.user = user;
+          socket.emit('update', {docs: socket.user.docs, sharedDocs: socket.user.sharedDocs});
         })
       ))
       .then(() => socket.emit('doc', newDoc))
@@ -166,6 +160,15 @@ io.on('connection', (socket) => {
         {new: true},
       )
       .then(() => (true));
+    }
+  });
+  socket.on('leaveDoc', () => {
+    if (socket.user) {
+      if (socket.docID) {
+        socket.leave(socket.docID);
+        socket.docID = null;
+        socket.emit('left', {docs: socket.user.docs, sharedDocs: socket.user.sharedDocs});
+      }
     }
   });
 });

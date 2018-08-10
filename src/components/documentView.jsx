@@ -14,6 +14,8 @@ export default class DocumentView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      docs: this.props.user.docs,
+      sharedDocs: this.props.user.sharedDocs,
       draft: false,
       doc: null,
       open: false,
@@ -27,6 +29,9 @@ export default class DocumentView extends React.Component {
   }
   componentDidMount() {
     this.props.changeMenuTitle('HDocs');
+    this.props.socket.on('update', (update) => {
+      this.setState({docs: update.docs, sharedDocs: update.sharedDocs});
+    });
     this.props.socket.on('doc', (doc) => {
       this.setState({doc, draft: true, open: false});
       this.props.toggleDocs();
@@ -110,7 +115,7 @@ export default class DocumentView extends React.Component {
           </Dialog>
 
           <h4>Your documents:</h4>
-          {this.props.user.docs.map((doc) => (
+          {this.state.docs.map((doc) => (
             <div>
               <Card>
                 <CardHeader title={doc.title} subtitle={doc.document}
@@ -163,7 +168,7 @@ export default class DocumentView extends React.Component {
             </div>
           ))}
           <h4>Shared with you:</h4>
-          {this.props.user.sharedDocs.map((doc) => (
+          {this.state.sharedDocs.map((doc) => (
             <Card>
               <CardHeader title={doc.title} subtitle={doc.document} onClick={() => this.props.socket.emit('doc', doc.document)}>
                 <CardActions>
